@@ -128,7 +128,10 @@ const AdminProjects = () => {
         if (error) throw error;
         toast({ title: "Success", description: "Project updated successfully." });
       } else {
-        const { error } = await supabase.from("projects").insert(projectData);
+        const { error } = await supabase.from("projects").insert({
+          ...projectData,
+          id: crypto.randomUUID(),
+        });
 
         if (error) throw error;
         toast({ title: "Success", description: "Project created successfully." });
