@@ -1,43 +1,27 @@
-import { Code2, Database, Layout, Server, Terminal, Palette } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Code2, Database, Layout, Server, Terminal, Palette, LucideIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const skills = [
-  {
-    category: "Frontend",
-    icon: Layout,
-    color: "text-primary",
-    bgColor: "bg-primary/10",
-    items: [
-      { name: "Vue.js", level: 90 },
-      { name: "HTML/CSS", level: 95 },
-      { name: "JavaScript", level: 88 },
-      { name: "Tailwind CSS", level: 92 },
-    ],
-  },
-  {
-    category: "Backend",
-    icon: Server,
-    color: "text-accent",
-    bgColor: "bg-accent/10",
-    items: [
-      { name: "Laravel", level: 95 },
-      { name: "PHP", level: 90 },
-      { name: "REST APIs", level: 88 },
-      { name: "MySQL", level: 85 },
-    ],
-  },
-  {
-    category: "Tools & Others",
-    icon: Terminal,
-    color: "text-primary",
-    bgColor: "bg-primary/10",
-    items: [
-      { name: "Git/GitHub", level: 85 },
-      { name: "VS Code", level: 92 },
-      { name: "Linux", level: 80 },
-      { name: "Docker", level: 70 },
-    ],
-  },
-];
+interface Skill {
+  id: string;
+  category: string;
+  name: string;
+  level: number | null;
+}
+
+const categoryIcons: Record<string, LucideIcon> = {
+  Frontend: Layout,
+  Backend: Server,
+  Tools: Terminal,
+  Other: Code2,
+};
+
+const categoryColors: Record<string, { color: string; bgColor: string }> = {
+  Frontend: { color: "text-primary", bgColor: "bg-primary/10" },
+  Backend: { color: "text-accent", bgColor: "bg-accent/10" },
+  Tools: { color: "text-primary", bgColor: "bg-primary/10" },
+  Other: { color: "text-accent", bgColor: "bg-accent/10" },
+};
 
 const techStack = [
   { name: "Laravel", icon: "🔴" },
@@ -53,6 +37,38 @@ const techStack = [
 ];
 
 const SkillsSection = () => {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSkills();
+  }, []);
+
+  const fetchSkills = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("skills")
+        .select("*")
+        .order("category", { ascending: true })
+        .order("display_order", { ascending: true });
+
+      if (error) throw error;
+      setSkills(data || []);
+    } catch (error) {
+      console.error("Error fetching skills:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const groupedSkills = skills.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
+    }
+    acc[skill.category].push(skill);
+    return acc;
+  }, {} as Record<string, Skill[]>);
+
   return (
     <section id="skills" className="py-20 md:py-32 bg-card/50">
       <div className="container mx-auto px-4 md:px-6">
@@ -84,39 +100,50 @@ const SkillsSection = () => {
           </div>
 
           {/* Skills Grid */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {skills.map((skillGroup, index) => (
-              <div
-                key={skillGroup.category}
-                className="glass rounded-2xl p-6 card-hover"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className={`p-3 ${skillGroup.bgColor} rounded-xl`}>
-                    <skillGroup.icon className={skillGroup.color} size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold">{skillGroup.category}</h3>
-                </div>
-
-                <div className="space-y-4">
-                  {skillGroup.items.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm font-medium">{skill.name}</span>
-                        <span className="text-sm text-muted-foreground">{skill.level}%</span>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8">
+              {Object.entries(groupedSkills).map(([category, categorySkills], index) => {
+                const IconComponent = categoryIcons[category] || Code2;
+                const colors = categoryColors[category] || categoryColors.Other;
+                
+                return (
+                  <div
+                    key={category}
+                    className="glass rounded-2xl p-6 card-hover"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className={`p-3 ${colors.bgColor} rounded-xl`}>
+                        <IconComponent className={colors.color} size={24} />
                       </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-1000"
-                          style={{ width: `${skill.level}%` }}
-                        />
-                      </div>
+                      <h3 className="text-xl font-bold">{category}</h3>
                     </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+
+                    <div className="space-y-4">
+                      {categorySkills.map((skill) => (
+                        <div key={skill.id}>
+                          <div className="flex justify-between mb-2">
+                            <span className="text-sm font-medium">{skill.name}</span>
+                            <span className="text-sm text-muted-foreground">{skill.level}%</span>
+                          </div>
+                          <div className="h-2 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-1000"
+                              style={{ width: `${skill.level}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Code Stats */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">

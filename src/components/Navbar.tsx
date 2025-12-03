@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Download, Github, Linkedin, Mail } from "lucide-react";
+import { Menu, X, Github, Linkedin, Mail, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
@@ -73,6 +74,9 @@ const Navbar = () => {
                 Hire Me
               </a>
             </Button>
+            <Link to="/admin/login" className="text-muted-foreground hover:text-primary transition-colors" title="Admin">
+              <Lock size={18} />
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -98,6 +102,14 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
+              <Link 
+                to="/admin/login" 
+                className="text-muted-foreground hover:text-primary transition-colors py-2 flex items-center gap-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Lock size={16} />
+                Admin
+              </Link>
               <Button variant="hero" size="sm" className="mt-2" asChild>
                 <a href="#contact">
                   <Mail size={16} />
