@@ -54,15 +54,17 @@ const AboutSection = () => {
                   <div className="p-3 bg-primary/10 rounded-xl">
                     <GraduationCap className="text-primary" size={28} />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-1">Education</h3>
-                    <h4 className="text-primary font-semibold">Kombolcha Institute of Technology</h4>
-                    <p className="text-muted-foreground">Bachelor's Degree in Computer Science</p>
-                    <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-                      <Calendar size={14} />
-                      <span>Graduate</span>
-                    </div>
-                  </div>
+                      <div className="flex-1">
+                      <h3 className="text-xl font-bold mb-1">Education</h3>
+                      <h4 className="text-primary font-semibold">Wollo University Kombolcha Institute of Technology</h4>
+                      <p className="text-muted-foreground">Bachelor's Degree in Software Engineering</p>
+                      <p className="font-bold text-sm mt-1">GPA: 3.92</p>
+                      <p className="text-sm font-semibold text-primary mt-1">I received a Medal Award for outstanding performance</p>
+                      <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                        <Calendar size={14} />
+                        <span>Graduate</span>
+                      </div>
+                      </div>
                 </div>
               </div>
 
@@ -75,7 +77,7 @@ const AboutSection = () => {
                   <div className="flex-1">
                     <h3 className="text-xl font-bold mb-1">Current Role</h3>
                     <h4 className="text-accent font-semibold">Woldia University</h4>
-                    <p className="text-muted-foreground">Lecturer - Computer Science Department</p>
+                    <p className="text-muted-foreground">Lecturer - Software Engineering Department</p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
                       <Calendar size={14} />
                       <span>Present</span>
@@ -93,7 +95,7 @@ const AboutSection = () => {
                   <div className="flex-1">
                     <h3 className="text-xl font-bold mb-1">Developer</h3>
                     <h4 className="text-primary font-semibold">Degan Technologies</h4>
-                    <p className="text-muted-foreground">Fullstack Development & Consulting</p>
+                    <p className="text-muted-foreground">Fullstack Developer</p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
                       <Calendar size={14} />
                       <span>Ongoing</span>

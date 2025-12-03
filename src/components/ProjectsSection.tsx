@@ -12,6 +12,7 @@ interface Project {
   link: string | null;
   gradient: string | null;
   icon_color: string | null;
+  image_url: string | null;
 }
 
 const iconMap: Record<string, LucideIcon> = {
@@ -91,11 +92,26 @@ const ProjectsSection = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Project Header */}
-                    <div className={`h-40 bg-gradient-to-br ${project.gradient || 'from-primary/20 to-primary/5'} p-6 flex items-end`}>
-                      <div className="p-4 glass rounded-xl">
-                        <IconComponent className={project.icon_color || 'text-primary'} size={32} />
+                    {project.image_url ? (
+                      <div className="h-48 overflow-hidden relative">
+                        <img 
+                          src={project.image_url} 
+                          alt={project.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute top-4 right-4">
+                           <div className="p-2 glass rounded-lg">
+                              <IconComponent className={project.icon_color || 'text-primary'} size={20} />
+                           </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className={`h-40 bg-gradient-to-br ${project.gradient || 'from-primary/20 to-primary/5'} p-6 flex items-end`}>
+                        <div className="p-4 glass rounded-xl">
+                          <IconComponent className={project.icon_color || 'text-primary'} size={32} />
+                        </div>
+                      </div>
+                    )}
 
                     {/* Project Content */}
                     <div className="p-6">

@@ -83,6 +83,7 @@ export type Database = {
           icon: string | null
           icon_color: string | null
           id: string
+          image_url: string | null
           is_visible: boolean | null
           link: string | null
           tags: string[] | null
@@ -94,11 +95,12 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           gradient?: string | null
-          icon?: string | null
-          icon_color?: string | null
-          id?: string
-          is_visible?: boolean | null
-          link?: string | null
+          icon: string | null
+          icon_color: string | null
+          id: string
+          image_url: string | null
+          is_visible: boolean | null
+          link: string | null
           tags?: string[] | null
           title: string
           updated_at?: string
@@ -111,6 +113,7 @@ export type Database = {
           icon?: string | null
           icon_color?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean | null
           link?: string | null
           tags?: string[] | null

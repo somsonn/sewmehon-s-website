@@ -23,9 +23,9 @@ const Footer = () => {
             </div>
 
             {/* Made with love */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            {/* <div className="flex items-center gap-2 text-sm text-muted-foreground">
               Made with <Heart className="text-red-500 fill-red-500" size={16} /> in Ethiopia
-            </div>
+            </div> */}
 
             {/* Back to top */}
             <button

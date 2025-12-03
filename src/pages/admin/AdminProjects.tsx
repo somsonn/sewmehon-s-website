@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, ExternalLink, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, ExternalLink, GripVertical, Upload } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ interface Project {
   icon_color: string | null;
   display_order: number | null;
   is_visible: boolean | null;
+  image_url: string | null;
 }
 
 const AdminProjects = () => {
@@ -27,6 +28,7 @@ const AdminProjects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -37,6 +39,7 @@ const AdminProjects = () => {
     gradient: "from-primary/20 to-primary/5",
     icon_color: "text-primary",
     is_visible: true,
+    image_url: "",
   });
 
   useEffect(() => {
@@ -64,6 +67,41 @@ const AdminProjects = () => {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setUploading(true);
+      if (!e.target.files || e.target.files.length === 0) {
+        throw new Error("You must select an image to upload.");
+      }
+
+      const file = e.target.files[0];
+      const fileExt = file.name.split(".").pop();
+      const filePath = `${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("project-images")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage.from("project-images").getPublicUrl(filePath);
+      
+      console.log("Image uploaded, URL:", data.publicUrl);
+      setFormData(prev => ({ ...prev, image_url: data.publicUrl }));
+      toast({ title: "Success", description: "Image uploaded successfully." });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,6 +115,7 @@ const AdminProjects = () => {
         gradient: formData.gradient,
         icon_color: formData.icon_color,
         is_visible: formData.is_visible,
+        image_url: formData.image_url,
         display_order: editingProject?.display_order || projects.length + 1,
       };
 
@@ -136,6 +175,7 @@ const AdminProjects = () => {
       gradient: project.gradient || "from-primary/20 to-primary/5",
       icon_color: project.icon_color || "text-primary",
       is_visible: project.is_visible ?? true,
+      image_url: project.image_url || "",
     });
     setIsDialogOpen(true);
   };
@@ -151,12 +191,13 @@ const AdminProjects = () => {
       gradient: "from-primary/20 to-primary/5",
       icon_color: "text-primary",
       is_visible: true,
+      image_url: "",
     });
   };
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -182,6 +223,27 @@ const AdminProjects = () => {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Project Image</label>
+                  <div className="flex items-center gap-4">
+                    {formData.image_url && (
+                      <img 
+                        src={formData.image_url} 
+                        alt="Preview" 
+                        className="w-16 h-16 object-cover rounded-md border"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                      />
+                      {uploading && <p className="text-xs text-muted-foreground mt-1">Uploading...</p>}
+                    </div>
+                  </div>
+                </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">Title *</label>
                   <Input
@@ -283,6 +345,13 @@ const AdminProjects = () => {
                 className="glass rounded-xl p-6 flex items-center gap-4"
               >
                 <GripVertical className="text-muted-foreground cursor-move" size={20} />
+                {project.image_url && (
+                  <img 
+                    src={project.image_url} 
+                    alt={project.title} 
+                    className="w-12 h-12 object-cover rounded-md border"
+                  />
+                )}
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
                     <h3 className="font-semibold">{project.title}</h3>
@@ -338,3 +407,4 @@ const AdminProjects = () => {
 };
 
 export default AdminProjects;
+
