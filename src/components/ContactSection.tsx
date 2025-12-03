@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Linkedin, Github, Send, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+interface SiteSettings {
+  cv_url: string;
+  contact_email: string;
+  contact_phone: string;
+  linkedin_url: string;
+}
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -14,35 +22,84 @@ const ContactSection = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [settings, setSettings] = useState<SiteSettings>({
+    cv_url: "",
+    contact_email: "somsonengda@gmail.com",
+    contact_phone: "+251930925984",
+    linkedin_url: "https://www.linkedin.com/in/sewmehon-engda-a50314362",
+  });
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("key, value");
+
+      if (error) throw error;
+
+      const settingsObj: Record<string, string> = {};
+      data?.forEach((item) => {
+        settingsObj[item.key] = item.value || "";
+      });
+
+      setSettings({
+        cv_url: settingsObj.cv_url || "",
+        contact_email: settingsObj.contact_email || "somsonengda@gmail.com",
+        contact_phone: settingsObj.contact_phone || "+251930925984",
+        linkedin_url: settingsObj.linkedin_url || "https://www.linkedin.com/in/sewmehon-engda-a50314362",
+      });
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const { error } = await supabase.from("contact_messages").insert({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      });
 
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
+      if (error) throw error;
 
-    setFormData({ name: "", email: "", subject: "", message: "" });
-    setIsSubmitting(false);
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for reaching out. I'll get back to you soon.",
+      });
+
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
     {
       icon: Mail,
       label: "Email",
-      value: "somsonengda@gmail.com",
-      href: "mailto:somsonengda@gmail.com",
+      value: settings.contact_email,
+      href: `mailto:${settings.contact_email}`,
     },
     {
       icon: Phone,
       label: "Phone",
-      value: "+251 930 925 984",
-      href: "tel:+251930925984",
+      value: settings.contact_phone,
+      href: `tel:${settings.contact_phone.replace(/\s/g, '')}`,
     },
     {
       icon: MapPin,
@@ -56,7 +113,7 @@ const ContactSection = () => {
     {
       icon: Linkedin,
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/sewmehon-engda-a50314362",
+      href: settings.linkedin_url,
     },
     {
       icon: Github,
@@ -66,7 +123,7 @@ const ContactSection = () => {
     {
       icon: Mail,
       label: "Email",
-      href: "mailto:somsonengda@gmail.com",
+      href: `mailto:${settings.contact_email}`,
     },
   ];
 
@@ -152,10 +209,19 @@ const ContactSection = () => {
                       Get a detailed overview of my experience
                     </p>
                   </div>
-                  <Button variant="hero">
-                    <Download size={18} />
-                    CV
-                  </Button>
+                  {settings.cv_url ? (
+                    <Button variant="hero" asChild>
+                      <a href={settings.cv_url} target="_blank" rel="noopener noreferrer">
+                        <Download size={18} />
+                        CV
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button variant="hero" disabled>
+                      <Download size={18} />
+                      CV
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
