@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ExternalLink, Globe, Bot, BookOpen, Building2, Heart, Code, Database, Server, Laptop, LucideIcon } from "lucide-react";
+import { ExternalLink, Globe, Bot, BookOpen, Building2, Heart, Code, Database, Server, Laptop, LucideIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -30,6 +30,8 @@ const iconMap: Record<string, LucideIcon> = {
 const ProjectsSection = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
     fetchProjects();
@@ -55,6 +57,18 @@ const ProjectsSection = () => {
   const getIcon = (iconName: string | null): LucideIcon => {
     if (!iconName) return Globe;
     return iconMap[iconName] || Globe;
+  };
+
+  const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentProjects = projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    const section = document.getElementById('projects');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -83,7 +97,7 @@ const ProjectsSection = () => {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map((project, index) => {
+              {currentProjects.map((project, index) => {
                 const IconComponent = getIcon(project.icon);
                 return (
                   <div
@@ -151,6 +165,41 @@ const ProjectsSection = () => {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-12 mb-8">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft size={16} />
+              </Button>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(page)}
+                  className={currentPage === page ? "bg-primary text-primary-foreground" : ""}
+                >
+                  {page}
+                </Button>
+              ))}
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight size={16} />
+              </Button>
             </div>
           )}
 
