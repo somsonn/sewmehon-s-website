@@ -7,6 +7,7 @@ interface Skill {
   category: string;
   name: string;
   level: number | null;
+  icon: string | null;
 }
 
 const categoryIcons: Record<string, LucideIcon> = {
@@ -69,6 +70,11 @@ const SkillsSection = () => {
     return acc;
   }, {} as Record<string, Skill[]>);
 
+  // Filter skills that have icons for the marquee
+  const marqueeSkills = skills.filter(skill => skill.icon);
+  // If no dynamic skills with icons, fall back to static techStack
+  const displayMarquee = marqueeSkills.length > 0 ? marqueeSkills : techStack;
+
   return (
     <section id="skills" className="py-20 md:py-32 bg-card/50">
       <div className="container mx-auto px-4 md:px-6">
@@ -85,14 +91,17 @@ const SkillsSection = () => {
           </div>
 
           {/* Tech Stack Marquee */}
-          <div className="mb-16 overflow-hidden">
-            <div className="flex gap-6 animate-slide-right">
-              {[...techStack, ...techStack].map((tech, index) => (
+          <div className="mb-16 overflow-hidden relative">
+            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
+            
+            <div className="flex gap-6 animate-marquee w-max">
+              {[...displayMarquee, ...displayMarquee].map((tech, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-2 px-6 py-3 glass rounded-full whitespace-nowrap card-hover"
                 >
-                  <span>{tech.icon}</span>
+                  <span>{(tech as any).icon}</span>
                   <span className="font-medium">{tech.name}</span>
                 </div>
               ))}

@@ -29,6 +29,7 @@ const AdminSkills = () => {
     name: "",
     category: "Frontend",
     level: 80,
+    icon: "",
   });
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const AdminSkills = () => {
         name: formData.name,
         category: formData.category,
         level: formData.level,
+        icon: formData.icon,
         display_order: editingSkill?.display_order || skills.filter(s => s.category === formData.category).length + 1,
       };
 
@@ -119,6 +121,7 @@ const AdminSkills = () => {
       name: skill.name,
       category: skill.category,
       level: skill.level || 80,
+      icon: (skill as any).icon || "",
     });
     setIsDialogOpen(true);
   };
@@ -129,6 +132,7 @@ const AdminSkills = () => {
       name: "",
       category: "Frontend",
       level: 80,
+      icon: "",
     });
   };
 
@@ -175,6 +179,14 @@ const AdminSkills = () => {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g., React, Laravel, Python"
                     required
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Icon (Emoji)</label>
+                  <Input
+                    value={formData.icon}
+                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                    placeholder="e.g., ⚛️, 🐘, 🐍"
                   />
                 </div>
                 <div>
