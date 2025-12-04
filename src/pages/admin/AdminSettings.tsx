@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Upload, FileText, Save, Trash2, ExternalLink } from "lucide-react";
+import { Upload, FileText, Save, Trash2, ExternalLink, Lock, User } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Settings {
   cv_url: string;
@@ -17,6 +18,7 @@ interface Settings {
 
 const AdminSettings = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [settings, setSettings] = useState<Settings>({
     cv_url: "",
     site_title: "",
@@ -29,9 +31,18 @@ const AdminSettings = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Profile Management State
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+
   useEffect(() => {
     fetchSettings();
-  }, []);
+    if (user?.email) {
+      setNewEmail(user.email);
+    }
+  }, [user]);
 
   const fetchSettings = async () => {
     try {
@@ -173,6 +184,53 @@ const AdminSettings = () => {
     }
   };
 
+  const handleUpdateProfile = async () => {
+    if (newPassword && newPassword !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUpdatingProfile(true);
+    try {
+      const updates: { email?: string; password?: string } = {};
+      if (newEmail && newEmail !== user?.email) updates.email = newEmail;
+      if (newPassword) updates.password = newPassword;
+
+      if (Object.keys(updates).length === 0) {
+        toast({
+          title: "Info",
+          description: "No changes to update.",
+        });
+        return;
+      }
+
+      const { error } = await supabase.auth.updateUser(updates);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully. If you changed your email, please check your inbox for verification.",
+      });
+      
+      // Clear password fields
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update profile.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdatingProfile(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <AdminLayout>
@@ -218,14 +276,14 @@ const AdminSettings = () => {
                       View
                     </Button>
                   </a>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-destructive hover:text-destructive"
-                    onClick={handleDeleteCV}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-destructive hover:text-destructive"
+          onClick={handleDeleteCV}
+        >
+          <Trash2 size={16} />
+        </Button>
                 </div>
               </div>
               <div className="relative">
@@ -328,6 +386,68 @@ const AdminSettings = () => {
             {isSaving ? "Saving..." : "Save Settings"}
           </Button>
         </div>
+
+        {/* Profile Management */}
+        <div className="glass rounded-xl p-6 space-y-6">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <User className="text-primary" size={24} />
+            Profile Management
+          </h2>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Email Address</label>
+            <div className="relative">
+              <User className="absolute left-3 top-3 text-muted-foreground" size={18} />
+              <Input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="pl-10"
+                placeholder="your@email.com"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">New Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 text-muted-foreground" size={18} />
+                <Input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="pl-10"
+                  placeholder="New Password"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Confirm Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 text-muted-foreground" size={18} />
+                <Input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="pl-10"
+                  placeholder="Confirm Password"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Button
+            variant="hero"
+            className="w-full"
+            onClick={handleUpdateProfile}
+            disabled={isUpdatingProfile}
+          >
+            <Save size={18} />
+            {isUpdatingProfile ? "Updating..." : "Update Profile"}
+          </Button>
+        </div>
+
       </div>
     </AdminLayout>
   );
