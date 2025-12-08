@@ -13,28 +13,32 @@ import AdminSkills from "./pages/admin/AdminSkills";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminSettings from "./pages/admin/AdminSettings";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/projects" element={<AdminProjects />} />
-            <Route path="/admin/skills" element={<AdminSkills />} />
-            <Route path="/admin/messages" element={<AdminMessages />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/projects" element={<AdminProjects />} />
+              <Route path="/admin/skills" element={<AdminSkills />} />
+              <Route path="/admin/messages" element={<AdminMessages />} />
+              <Route path="/admin/settings" element={<AdminSettings />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

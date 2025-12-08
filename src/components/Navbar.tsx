@@ -3,6 +3,7 @@ import { Menu, X, Github, Linkedin, Mail, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
@@ -55,6 +56,7 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
+            <ThemeSwitcher />
             <LanguageSwitcher />
             <a
               href="https://github.com"
@@ -106,7 +108,8 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
-              <div className="py-2">
+              <div className="py-2 flex items-center gap-4">
+                <ThemeSwitcher />
                 <LanguageSwitcher />
               </div>
               <Link 
