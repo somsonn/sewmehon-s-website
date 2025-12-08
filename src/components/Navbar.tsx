@@ -58,7 +58,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-4">
             <ThemeSwitcher />
             <LanguageSwitcher />
-            <a
+            {/* <a
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
@@ -73,7 +73,7 @@ const Navbar = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
             >
               <Linkedin size={20} />
-            </a>
+            </a> */}
             <Button variant="hero" size="sm" asChild>
               <a href="#contact">
                 <Mail size={16} />
