@@ -77,10 +77,11 @@ const AdminMessages = () => {
       toast({ title: "Success", description: "Message deleted successfully." });
       setSelectedMessage(null);
       fetchMessages();
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete message.";
       toast({
         title: "Error",
-        description: error.message || "Failed to delete message.",
+        description: errorMessage,
         variant: "destructive",
       });
     }

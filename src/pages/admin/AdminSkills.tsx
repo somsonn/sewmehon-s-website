@@ -15,6 +15,7 @@ interface Skill {
   name: string;
   level: number | null;
   display_order: number | null;
+  icon?: string | null;
 }
 
 const categories = ["Frontend", "Backend", "Tools", "Other"];
@@ -88,10 +89,11 @@ const AdminSkills = () => {
       setIsDialogOpen(false);
       resetForm();
       fetchSkills();
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to save skill.";
       toast({
         title: "Error",
-        description: error.message || "Failed to save skill.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -106,10 +108,11 @@ const AdminSkills = () => {
 
       toast({ title: "Success", description: "Skill deleted successfully." });
       fetchSkills();
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete skill.";
       toast({
         title: "Error",
-        description: error.message || "Failed to delete skill.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -121,7 +124,7 @@ const AdminSkills = () => {
       name: skill.name,
       category: skill.category,
       level: skill.level || 80,
-      icon: (skill as any).icon || "",
+      icon: skill.icon || "",
     });
     setIsDialogOpen(true);
   };

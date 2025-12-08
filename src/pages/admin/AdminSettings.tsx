@@ -93,10 +93,11 @@ const AdminSettings = () => {
       }
 
       toast({ title: "Success", description: "Settings saved successfully." });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to save settings.";
       toast({
         title: "Error",
-        description: error.message || "Failed to save settings.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -151,10 +152,11 @@ const AdminSettings = () => {
         .upsert({ key: "cv_url", value: urlData.publicUrl });
 
       toast({ title: "Success", description: "CV uploaded successfully." });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to upload CV.";
       toast({
         title: "Error",
-        description: error.message || "Failed to upload CV.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -211,10 +213,11 @@ const AdminSettings = () => {
         .upsert({ key: "logo_url", value: urlData.publicUrl });
 
       toast({ title: "Success", description: "Logo uploaded successfully." });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to upload logo.";
       toast({
         title: "Error",
-        description: error.message || "Failed to upload logo.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -238,10 +241,11 @@ const AdminSettings = () => {
 
       setSettings(prev => ({ ...prev, cv_url: "" }));
       toast({ title: "Success", description: "CV deleted successfully." });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete CV.";
       toast({
         title: "Error",
-        description: error.message || "Failed to delete CV.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -283,10 +287,11 @@ const AdminSettings = () => {
       // Clear password fields
       setNewPassword("");
       setConfirmPassword("");
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to update profile.";
       toast({
         title: "Error",
-        description: error.message || "Failed to update profile.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
