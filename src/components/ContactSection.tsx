@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation, Trans } from "react-i18next";
 
 interface SiteSettings {
   cv_url: string;
@@ -14,6 +15,7 @@ interface SiteSettings {
 }
 
 const ContactSection = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -72,15 +74,15 @@ const ContactSection = () => {
       if (error) throw error;
 
       toast({
-        title: "Message Sent!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
+        title: t('contact.successTitle'),
+        description: t('contact.successDesc'),
       });
 
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.message || "Failed to send message. Please try again.",
+        title: t('contact.errorTitle'),
+        description: error.message || t('contact.errorDesc'),
         variant: "destructive",
       });
     } finally {
@@ -91,21 +93,21 @@ const ContactSection = () => {
   const contactInfo = [
     {
       icon: Mail,
-      label: "Email",
+      label: t('contact.email'),
       value: settings.contact_email,
       href: `mailto:${settings.contact_email}`,
     },
     {
       icon: Phone,
-      label: "Phone",
+      label: t('contact.phone'),
       value: settings.contact_phone,
-      href: `tel:${settings.contact_phone.replace(/\s/g, '')}`,
+      href: `tel:${settings.contact_phone}`,
     },
     {
       icon: MapPin,
-      label: "Location",
-      value: "Woldia, Ethiopia",
-      href: null,
+      label: t('contact.location'),
+      value: "Ethiopia",
+      href: "#",
     },
   ];
 
@@ -133,12 +135,14 @@ const ContactSection = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="text-primary font-mono text-sm tracking-wider uppercase">Contact</span>
+            <span className="text-primary font-mono text-sm tracking-wider uppercase">{t('contact.subtitle')}</span>
             <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-4">
-              Let's <span className="text-gradient">Connect</span>
+              <Trans i18nKey="contact.title">
+                Get In <span className="text-gradient">Touch</span>
+              </Trans>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Have a project in mind or want to collaborate? Feel free to reach out!
+              {t('contact.description')}
             </p>
           </div>
 
@@ -146,7 +150,7 @@ const ContactSection = () => {
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-bold mb-6">Get in Touch</h3>
+                <h3 className="text-xl font-bold mb-6">{t('contact.connect')}</h3>
                 <p className="text-muted-foreground mb-8">
                   I'm always open to discussing new projects, creative ideas, or opportunities 
                   to be part of your vision. Whether you need a fullstack developer or a technical consultant,
@@ -183,7 +187,7 @@ const ContactSection = () => {
 
               {/* Social Links */}
               <div>
-                <h4 className="font-semibold mb-4">Follow Me</h4>
+                <h4 className="font-semibold mb-4">{t('contact.followMe')}</h4>
                 <div className="flex gap-4">
                   {socialLinks.map((social) => (
                     <a
@@ -204,9 +208,9 @@ const ContactSection = () => {
               <div className="glass rounded-xl p-6 card-hover">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-bold mb-1">Download my CV</h4>
+                    <h4 className="font-bold mb-1">{t('contact.downloadCVTitle')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Get a detailed overview of my experience
+                      {t('contact.downloadCVDesc')}
                     </p>
                   </div>
                   {settings.cv_url ? (
@@ -228,11 +232,11 @@ const ContactSection = () => {
 
             {/* Contact Form */}
             <div className="glass rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+              <h3 className="text-2xl font-bold mb-6">{t('contact.sendMessage')}</h3>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Name</label>
+                    <label className="text-sm font-medium mb-2 block">{t('contact.name')}</label>
                     <Input
                       placeholder="Your name"
                       value={formData.name}
@@ -242,7 +246,7 @@ const ContactSection = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Email</label>
+                    <label className="text-sm font-medium mb-2 block">{t('contact.email')}</label>
                     <Input
                       type="email"
                       placeholder="your@email.com"
@@ -254,7 +258,7 @@ const ContactSection = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Subject</label>
+                  <label className="text-sm font-medium mb-2 block">{t('contact.subject')}</label>
                   <Input
                     placeholder="What's this about?"
                     value={formData.subject}
@@ -264,7 +268,7 @@ const ContactSection = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Message</label>
+                  <label className="text-sm font-medium mb-2 block">{t('contact.message')}</label>
                   <Textarea
                     placeholder="Tell me about your project..."
                     rows={5}
@@ -282,11 +286,11 @@ const ContactSection = () => {
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    "Sending..."
+                    t('contact.sending')
                   ) : (
                     <>
                       <Send size={18} />
-                      Send Message
+                      {t('contact.send')}
                     </>
                   )}
                 </Button>

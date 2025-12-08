@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Code2, Database, Layout, Server, Terminal, Palette, LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation, Trans } from "react-i18next";
 
 interface Skill {
   id: string;
@@ -38,6 +39,7 @@ const techStack = [
 ];
 
 const SkillsSection = () => {
+  const { t } = useTranslation();
   const [skills, setSkills] = useState<Skill[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -81,12 +83,14 @@ const SkillsSection = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="text-primary font-mono text-sm tracking-wider uppercase">My Skills</span>
+            <span className="text-primary font-mono text-sm tracking-wider uppercase">{t('skills.subtitle')}</span>
             <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-4">
-              Technical <span className="text-gradient">Expertise</span>
+              <Trans i18nKey="skills.title">
+                Technical <span className="text-gradient">Expertise</span>
+              </Trans>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Proficient in modern web technologies with hands-on experience building production applications
+              {t('skills.description')}
             </p>
           </div>
 

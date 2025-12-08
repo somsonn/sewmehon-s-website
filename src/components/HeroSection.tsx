@@ -1,8 +1,11 @@
 import { ArrowDown, Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.jpg";
+import { useTranslation, Trans } from "react-i18next";
 
 const HeroSection = () => {
+  const { t } = useTranslation();
+
   return (
     <section
       id="home"
@@ -31,26 +34,28 @@ const HeroSection = () => {
           <div className="animate-fade-up opacity-0 stagger-1">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-muted-foreground mb-6">
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-              Available for opportunities
+              {t('hero.available')}
             </span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-up opacity-0 stagger-2">
-            <span className="text-foreground">Hi, I'm </span>
+            <span className="text-foreground">{t('hero.greeting')} </span>
             <span className="text-gradient">Sewmehon Engda</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-muted-foreground mb-4 animate-fade-up opacity-0 stagger-3">
-            Software Engineer • Fullstack Developer • Lecturer
+            {t('hero.role')}
           </p>
 
           {/* Description */}
           <p className="text-lg text-muted-foreground/80 max-w-2xl mx-auto mb-8 animate-fade-up opacity-0 stagger-4">
-            Building scalable web applications with modern technologies. 
-            Currently lecturing at <span className="text-primary">Woldia University</span> and 
-            crafting digital solutions at <span className="text-accent">Degan Technologies</span>.
+            <Trans i18nKey="hero.description">
+              Building scalable web applications with modern technologies. 
+              Currently lecturing at <span className="text-primary">Woldia University</span> and 
+              crafting digital solutions at <span className="text-accent">Degan Technologies</span>.
+            </Trans>
           </p>
 
           {/* CTA Buttons */}
@@ -58,13 +63,13 @@ const HeroSection = () => {
             <Button variant="hero" size="lg" asChild>
               <a href="#projects">
                 <ExternalLink size={20} />
-                View My Work
+                {t('hero.viewWork')}
               </a>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <a href="#contact">
                 <Download size={20} />
-                Download CV
+                {t('hero.downloadCV')}
               </a>
             </Button>
           </div>
@@ -73,15 +78,15 @@ const HeroSection = () => {
           <div className="grid grid-cols-3 gap-8 max-w-lg mx-auto animate-fade-up opacity-0 stagger-6">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-gradient">10+</div>
-              <div className="text-sm text-muted-foreground">Projects</div>
+              <div className="text-sm text-muted-foreground">{t('hero.stats.projects')}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-gradient">3+</div>
-              <div className="text-sm text-muted-foreground">Years Exp</div>
+              <div className="text-sm text-muted-foreground">{t('hero.stats.exp')}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-gradient">10+</div>
-              <div className="text-sm text-muted-foreground">Clients</div>
+              <div className="text-sm text-muted-foreground">{t('hero.stats.clients')}</div>
             </div>
           </div>
         </div>

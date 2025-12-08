@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contact": "Contact",
+    "hireMe": "Hire Me"
+  },
+  "hero": {
+    "available": "Available for opportunities",
+    "greeting": "Hi, I'm",
+    "role": "Software Engineer • Fullstack Developer • Lecturer",
+    "description": "Building scalable web applications with modern technologies. Currently lecturing at <1>Woldia University</1> and crafting digital solutions at <3>Degan Technologies</3>.",
+    "viewWork": "View My Work",
+    "downloadCV": "Download CV",
+    "stats": {
+      "projects": "Projects",
+      "exp": "Years Exp",
+      "clients": "Clients"
+    }
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Get to know me",
+    "description": "I am a passionate Software Engineer and Fullstack Developer based in Ethiopia. With a strong foundation in computer science and years of practical experience, I specialize in building robust web applications using modern technologies.",
+    "education": "Education",
+    "experience": "Experience",
+    "sectionTitle": "About Me",
+    "mainHeading": "Passionate <1>Developer</1> & Educator",
+    "subHeading": "Combining academic excellence with practical software development experience",
+    "bio1": "I'm <1>Sewmehon Engda</1>, a dedicated software engineer and fullstack developer with a passion for creating impactful digital solutions. Currently serving as a <3>Lecturer at Woldia University</3>, I bridge the gap between academic theory and industry practice.",
+    "bio2": "My expertise spans across modern web technologies including Laravel, Vue.js, and various frontend frameworks. I've successfully delivered projects ranging from medical college management systems to inventory bots and knowledge management platforms.",
+    "location": "Location",
+    "position": "Position",
+    "educationTitle": "Education",
+    "educationSchool": "Wollo University Kombolcha Institute of Technology",
+    "educationDegree": "Bachelor's Degree in Software Engineering",
+    "educationGPA": "GPA: 3.92",
+    "educationAward": "I received a Medal Award for outstanding performance",
+    "currentRoleTitle": "Current Role",
+    "currentRoleSchool": "Woldia University",
+    "currentRoleDesc": "Lecturer - Software Engineering Department",
+    "sideWorkTitle": "Developer",
+    "sideWorkCompany": "Degan Technologies",
+    "sideWorkDesc": "Fullstack Developer",
+    "present": "Present",
+    "graduate": "Graduate"
+  },
+  "skills": {
+    "title": "Technical Expertise",
+    "subtitle": "My Skills",
+    "description": "Proficient in modern web technologies with hands-on experience building production applications"
+  },
+  "projects": {
+    "title": "Featured Projects",
+    "subtitle": "Portfolio",
+    "description": "A selection of projects I've built, ranging from medical systems to AI-powered bots",
+    "liveDemo": "Live Demo",
+    "more": "Interested in more projects or collaboration?",
+    "workTogether": "Let's Work Together"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Contact",
+    "description": "Have a project in mind or want to discuss opportunities? I'd love to hear from you.",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "downloadCV": "Download CV",
+    "connect": "Connect with me",
+    "successTitle": "Message Sent!",
+    "successDesc": "Thank you for reaching out. I'll get back to you soon.",
+    "errorTitle": "Error",
+    "errorDesc": "Failed to send message. Please try again.",
+    "phone": "Phone",
+    "location": "Location",
+    "followMe": "Follow Me",
+    "downloadCVTitle": "Download my CV",
+    "downloadCVDesc": "Get a detailed overview of my experience",
+    "sendMessage": "Send a Message"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "madeWith": "Made with"
+  }
+}

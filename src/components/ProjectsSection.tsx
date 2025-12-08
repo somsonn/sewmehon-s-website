@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ExternalLink, Globe, Bot, BookOpen, Building2, Heart, Code, Database, Server, Laptop, LucideIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation, Trans } from "react-i18next";
 
 interface Project {
   id: string;
@@ -28,6 +29,7 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 const ProjectsSection = () => {
+  const { t } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,12 +79,14 @@ const ProjectsSection = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="text-primary font-mono text-sm tracking-wider uppercase">Portfolio</span>
+            <span className="text-primary font-mono text-sm tracking-wider uppercase">{t('projects.subtitle')}</span>
             <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-4">
-              Featured <span className="text-gradient">Projects</span>
+              <Trans i18nKey="projects.title">
+                Featured <span className="text-gradient">Projects</span>
+              </Trans>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              A selection of projects I've built, ranging from medical systems to AI-powered bots
+              {t('projects.description')}
             </p>
           </div>
 
@@ -156,7 +160,7 @@ const ProjectsSection = () => {
                           <Button variant="outline" size="sm" asChild className="flex-1">
                             <a href={project.link} target="_blank" rel="noopener noreferrer">
                               <ExternalLink size={14} />
-                              Live Demo
+                              {t('projects.liveDemo')}
                             </a>
                           </Button>
                         </div>
@@ -206,11 +210,11 @@ const ProjectsSection = () => {
           {/* More Projects CTA */}
           <div className="text-center mt-12">
             <p className="text-muted-foreground mb-4">
-              Interested in more projects or collaboration?
+              {t('projects.more')}
             </p>
             <Button variant="hero" asChild>
               <a href="#contact">
-                Let's Work Together
+                {t('projects.workTogether')}
               </a>
             </Button>
           </div>

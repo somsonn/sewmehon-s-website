@@ -1,6 +1,8 @@
 import { Heart, ArrowUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -18,7 +20,7 @@ const Footer = () => {
               </a>
               <div className="h-6 w-px bg-border" />
               <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Sewmehon Engda. All rights reserved.
+                © {new Date().getFullYear()} Sewmehon Engda. {t('footer.rights')}
               </p>
             </div>
 

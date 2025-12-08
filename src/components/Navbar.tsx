@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { Menu, X, Github, Linkedin, Mail, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -16,11 +19,11 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
+    { name: t('nav.home'), href: "#home" },
+    { name: t('nav.about'), href: "#about" },
+    { name: t('nav.skills'), href: "#skills" },
+    { name: t('nav.projects'), href: "#projects" },
+    { name: t('nav.contact'), href: "#contact" },
   ];
 
   return (
@@ -52,6 +55,7 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
+            <LanguageSwitcher />
             <a
               href="https://github.com"
               target="_blank"
@@ -71,7 +75,7 @@ const Navbar = () => {
             <Button variant="hero" size="sm" asChild>
               <a href="#contact">
                 <Mail size={16} />
-                Hire Me
+                {t('nav.hireMe')}
               </a>
             </Button>
             <Link to="/admin/login" className="text-muted-foreground hover:text-primary transition-colors" title="Admin">
@@ -102,6 +106,9 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
+              <div className="py-2">
+                <LanguageSwitcher />
+              </div>
               <Link 
                 to="/admin/login" 
                 className="text-muted-foreground hover:text-primary transition-colors py-2 flex items-center gap-2"
@@ -113,7 +120,7 @@ const Navbar = () => {
               <Button variant="hero" size="sm" className="mt-2" asChild>
                 <a href="#contact">
                   <Mail size={16} />
-                  Hire Me
+                  {t('nav.hireMe')}
                 </a>
               </Button>
             </div>
