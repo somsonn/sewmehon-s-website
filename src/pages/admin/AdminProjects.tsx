@@ -91,10 +91,11 @@ const AdminProjects = () => {
       console.log("Image uploaded, URL:", data.publicUrl);
       setFormData(prev => ({ ...prev, image_url: data.publicUrl }));
       toast({ title: "Success", description: "Image uploaded successfully." });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to upload image.";
       toast({
         title: "Error",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -140,10 +141,11 @@ const AdminProjects = () => {
       setIsDialogOpen(false);
       resetForm();
       fetchProjects();
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to save project.";
       toast({
         title: "Error",
-        description: error.message || "Failed to save project.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -158,10 +160,11 @@ const AdminProjects = () => {
 
       toast({ title: "Success", description: "Project deleted successfully." });
       fetchProjects();
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete project.";
       toast({
         title: "Error",
-        description: error.message || "Failed to delete project.",
+        description: errorMessage,
         variant: "destructive",
       });
     }

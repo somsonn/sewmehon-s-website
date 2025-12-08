@@ -79,10 +79,11 @@ const ContactSection = () => {
       });
 
       setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('contact.errorDesc');
       toast({
         title: t('contact.errorTitle'),
-        description: error.message || t('contact.errorDesc'),
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

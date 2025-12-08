@@ -105,7 +105,7 @@ const SkillsSection = () => {
                   key={index}
                   className="flex items-center gap-2 px-6 py-3 glass rounded-full whitespace-nowrap card-hover"
                 >
-                  <span>{(tech as any).icon}</span>
+                  <span>{tech.icon || ''}</span>
                   <span className="font-medium">{tech.name}</span>
                 </div>
               ))}
