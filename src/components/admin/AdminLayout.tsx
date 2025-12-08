@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminSidebar from "./AdminSidebar";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -36,8 +37,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <div className="min-h-screen bg-background flex">
       <AdminSidebar />
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">
+      <main className="flex-1 overflow-auto flex flex-col">
+        <header className="flex justify-end items-center p-4 border-b border-border bg-card/50 backdrop-blur-sm">
+          <ThemeSwitcher />
+        </header>
+        <div className="p-8 flex-1">
           {children}
         </div>
       </main>
