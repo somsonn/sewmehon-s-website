@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { 
   LayoutDashboard, 
   FolderKanban, 
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -22,15 +24,30 @@ const navItems = [
 const AdminSidebar = () => {
   const location = useLocation();
   const { signOut, user } = useAuth();
+  const [logoUrl, setLogoUrl] = useState("/icon.svg");
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "logo_url")
+        .single();
+      
+      if (data?.value) {
+        setLogoUrl(data.value);
+      }
+    };
+    fetchLogo();
+  }, []);
 
   return (
     <aside className="w-64 min-h-screen bg-card border-r border-border flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-border">
-        <Link to="/" className="text-2xl font-bold">
-          <span className="text-gradient">SE</span>
-          <span className="text-foreground">.</span>
-          <span className="text-sm font-normal text-muted-foreground ml-2">Admin</span>
+        <Link to="/" className="flex items-center gap-3">
+          <img src={logoUrl} alt="Logo" className="h-12 w-12 rounded-full object-cover border border-border" />
+          <span className="font-bold text-xl">Admin</span>
         </Link>
       </div>
 

@@ -14,6 +14,7 @@ interface Settings {
   contact_email: string;
   contact_phone: string;
   linkedin_url: string;
+  logo_url: string;
 }
 
 const AdminSettings = () => {
@@ -26,6 +27,7 @@ const AdminSettings = () => {
     contact_email: "",
     contact_phone: "",
     linkedin_url: "",
+    logo_url: "",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -64,6 +66,7 @@ const AdminSettings = () => {
         contact_email: settingsObj.contact_email || "",
         contact_phone: settingsObj.contact_phone || "",
         linkedin_url: settingsObj.linkedin_url || "",
+        logo_url: settingsObj.logo_url || "",
       });
     } catch (error) {
       console.error("Error fetching settings:", error);
@@ -150,8 +153,68 @@ const AdminSettings = () => {
       toast({ title: "Success", description: "CV uploaded successfully." });
     } catch (error: any) {
       toast({
-        title: "Upload Failed",
+        title: "Error",
         description: error.message || "Failed to upload CV.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid File",
+        description: "Please upload an image file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please upload an image smaller than 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileName = `logo-${Date.now()}.${file.name.split('.').pop()}`;
+
+      // Try to upload to 'images' bucket first, fallback to 'documents' if needed
+      // Assuming 'documents' exists based on previous code, but 'images' is better for images.
+      // I'll use 'documents' to be safe as I know it exists from the CV upload code.
+      const { data, error } = await supabase.storage
+        .from("documents") 
+        .upload(fileName, file, { upsert: true });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage
+        .from("documents")
+        .getPublicUrl(fileName);
+
+      setSettings(prev => ({ ...prev, logo_url: urlData.publicUrl }));
+      
+      // Save to database
+      await supabase
+        .from("site_settings")
+        .upsert({ key: "logo_url", value: urlData.publicUrl });
+
+      toast({ title: "Success", description: "Logo uploaded successfully." });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to upload logo.",
         variant: "destructive",
       });
     } finally {
@@ -324,6 +387,45 @@ const AdminSettings = () => {
               </p>
             </div>
           )}
+        </div>
+
+        {/* Logo Upload */}
+        <div className="glass rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Upload className="text-primary" size={24} />
+            Admin Logo
+          </h2>
+          
+          <div className="space-y-4">
+            {settings.logo_url && (
+              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
+                <img src={settings.logo_url} alt="Admin Logo" className="h-12 w-12 object-contain" />
+                <div className="flex-1">
+                  <p className="font-medium">Current Logo</p>
+                  <p className="text-sm text-muted-foreground">
+                    This logo is displayed in the admin sidebar
+                  </p>
+                </div>
+              </div>
+            )}
+            
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoUpload}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                disabled={isUploading}
+              />
+              <Button variant="outline" className="w-full" disabled={isUploading}>
+                <Upload size={18} />
+                {isUploading ? "Uploading..." : "Upload New Logo"}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground text-center">
+              Supported: PNG, JPG, SVG, WEBP (Max 5MB)
+            </p>
+          </div>
         </div>
 
         {/* Site Settings */}
