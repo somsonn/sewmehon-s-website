@@ -12,6 +12,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -21,7 +22,7 @@ const navItems = [
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ className, onNavigate }: { className?: string; onNavigate?: () => void }) => {
   const location = useLocation();
   const { signOut, user } = useAuth();
   const [logoUrl, setLogoUrl] = useState("/icon.svg");
@@ -42,7 +43,7 @@ const AdminSidebar = () => {
   }, []);
 
   return (
-    <aside className="w-64 min-h-screen bg-card border-r border-border flex flex-col">
+    <aside className={cn("w-64 min-h-screen bg-card border-r border-border flex flex-col", className)}>
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <Link to="/" className="flex items-center gap-3">
@@ -60,6 +61,7 @@ const AdminSidebar = () => {
               <li key={item.name}>
                 <Link
                   to={item.href}
+                  onClick={onNavigate}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
                     isActive
                       ? "bg-primary text-primary-foreground"
